@@ -17,8 +17,9 @@ describe 'Expander', ->
   describe 'scripts expand', ->
     rawHtml = '<script glob="js/**/*.js"></script>'
     it 'should expand scripts', (done) ->
-      expander.expand rawHtml, {basepath: basepath}, (html) ->
+      expander.expand rawHtml, {basepath: basepath, tidy: false}, (html) ->
         hasAll(html, 'script', 'src', ['js/bar.js', 'js/foo.js'])
+        expect(html).to.not.contain '\n'
         done()
 
     it 'should tidy html when option given', (done) ->

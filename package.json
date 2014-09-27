@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Utility to expand glob expressions in HTML.",
   "main": "lib/index.js",
+  "bin": {
+    "glob-html": "bin/glob-html.js"
+  },
   "scripts": {
     "test": "grunt test"
   },
@@ -38,10 +41,11 @@
   "dependencies": {
     "async": "^0.9.0",
     "cheerio": "^0.17.0",
+    "fs-extra": "^0.12.0",
     "glob": "^4.0.6",
     "js-beautify": "^1.5.1",
-    "fs-extra": "^0.12.0",
     "lodash": "^2.4.1",
+    "minimist": "^1.1.0",
     "node-minify": "^0.10.5",
     "string": "^2.1.0"
   }

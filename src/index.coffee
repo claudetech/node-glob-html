@@ -1,5 +1,6 @@
-_        = require 'lodash'
+_         = require 'lodash'
 fs        = require 'fs'
+path      = require 'path'
 
 expander  = require './expander'
 processor = require './processor'
@@ -7,6 +8,7 @@ processor = require './processor'
 exports.process = (rawHtml, options, callback) ->
   [options, callback] = [{}, options] if _.isFunction(options)
   options ?= {}
+  options.tidy ?= true
   expander.expand rawHtml, options, (html, $) ->
     if options.concat
       processor.concatAndMinify $, options, (newHtml) ->
@@ -15,11 +17,14 @@ exports.process = (rawHtml, options, callback) ->
       callback html
 
 exports.processFile = (filepath, options, callback) ->
+  [options, callback] = [{}, options] if _.isFunction(options)
+  options ?= {}
+  options.basepath ?= path.dirname(filepath)
   fs.readFile filepath, 'utf8', (err, rawHtml) ->
     return callback(err) if err?
     exports.process rawHtml, options, (html) ->
       if options.overwrite
         fs.writeFile filepath, html, ->
-          callback(html)
+          callback(null, html)
       else
-        callback(html)
+        callback(null, html)

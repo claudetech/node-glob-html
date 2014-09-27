@@ -1,5 +1,6 @@
 expect   = require 'expect.js'
 path     = require 'path'
+fs       = require 'fs-extra'
 
 globHtml = require '../src/index'
 expander = require '../src/expander'
@@ -18,5 +19,8 @@ describe 'glob html', ->
   describe 'concat mode', ->
     rawHtml = '<script glob="js/**/*.js"></script><link ref="stylesheet" glob="css/**/*.css">'
     it 'should concatenate files in groups', (done) ->
-      globHtml.process rawHtml, {basepath: basepath, concat: true, minify: true}, (html) ->
+      outdir = '/tmp/globhtml-test'
+      fs.ensureDirSync outdir
+      options = {basepath: basepath, outdir: outdir, concat: true, minify: true}
+      globHtml.process rawHtml, options, (html) ->
         done()

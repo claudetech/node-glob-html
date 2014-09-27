@@ -1,9 +1,10 @@
 uglifyjs   = require 'uglify-js'
 _          = require 'lodash'
-fs         = require 'fs'
+fs         = require 'fs-extra'
 path       = require 'path'
 compressor = require 'node-minify'
 async      = require 'async'
+S          = require 'string'
 
 util       = require './util'
 
@@ -28,14 +29,19 @@ getCompressor = (type, options) ->
 
 getFileExt = (type) ->
   switch type
-    when 'script' then '.js'
-    when 'link' then '.css'
+    when 'script' then 'js'
+    when 'link' then 'css'
     else ''
 
 minify = (options, callback) ->
+  meta = options.meta
+  delete options.meta
   _.extend(options,
     callback: (err, min) ->
-      callback err, {file: options.fileOut, content: min}
+      callback err, _.extend(meta,
+        file: options.fileOut
+        content: min
+      )
   )
   new compressor.minify(options)
 
@@ -44,25 +50,44 @@ exports.concatenateFiles = ($, options, groupedFiles, callback) ->
   _.each groupedFiles, (groups, type) ->
     _.each groups, (files, group) ->
       ext = getFileExt(type)
-      ext = ".min" + ext if options.minify
-      outFile = path.join(options.basepath, group + ext)
+      pathPrefix = options["#{ext}Prefix"] ? ext
+      ext = "min." + ext if options.minify
+      outFile = path.join(options.outdir ? options.basepath, pathPrefix, "#{group}.#{ext}")
+      fs.ensureDirSync(path.dirname(outFile))
       files = _.map files, (f) -> path.join(options.basepath, f)
-      [type, minifyOptions] = getCompressor(type, options) #
+      [minType, minifyOptions] = getCompressor(type, options)
       tasks.push({
-        type: type
+        type: minType
         options: minifyOptions.concat(if _.isArray(options.minify) then options.minify else [])
         fileIn: files
         fileOut: outFile
+        tempPath: options.tempPath ? '/tmp/'
+        meta:
+          type: type
+          group: group
+          pathPrefix: pathPrefix
       })
   async.map tasks, minify, (err, results) ->
     callback(err, results)
 
-exports.finalize = ($, options, callback) ->
+exports.replaceTags = ($, options, results) ->
+  _.each results, (result) ->
+    $elems = $("#{result.type}[group=#{result.group}]")
+    if options.httpBasepath
+      basepath = path.join options.httpBasepath, options.pathPrefix
+    else
+      basepath = options.outdir ? options.basepath
+      filepath = S(result.file.replace(basepath, '')).chompLeft('/').s
+    $elem = $elems.first().clone().attr(util.getSrcProperty(result.type), filepath).attr('group', null)
+    $elems.first().before($.html($elem))
+    $elems.remove()
+
+exports.concatAndMinify = ($, options, callback) ->
   groups = $('*[group]')
   files = _.map groups, (g) ->
     $g = $(g)
     { group: $g.attr('group'), path: $g.attr(util.getSrcProperty(g.name)), type: g.name }
   groupedFiles = exports.makeGroups files
   exports.concatenateFiles $, options, groupedFiles, (err, results) ->
-    console.log results
-    callback()
+    exports.replaceTags($, options, results)
+    callback($.html(), $)

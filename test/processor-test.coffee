@@ -31,5 +31,3 @@ describe 'processor', ->
       expected.script.default = ['bar.js', 'foo.js']
       result = processor.makeGroups(files)
       expect(result).to.eql expected
-
-  describe '#finalize', ->

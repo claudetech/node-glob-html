@@ -1,3 +1,4 @@
+expect   = require 'expect.js'
 path     = require 'path'
 
 globHtml = require '../src/index'

@@ -23,14 +23,17 @@ expandOne = ($, elem, options, callback) ->
     $elem.remove()
     callback()
 
+getHtml = ($, options) ->
+  if options.tidy then beautifyHtml($.html()) else $.html()
+
 exports.expand = (rawHtml, options, callback) ->
   $ = cheerio.load rawHtml
   [options, callback] = [{}, options] if _.isFunction(options)
   options.basepath ?= ''
   [toGlob, count] = [$('*[glob]'), 0]
+  return callback(getHtml($, options), $) if toGlob.length == 0
   toGlob.each (i, elem) ->
     expandOne $, elem, options, ->
       count += 1
       if count == toGlob.length
-        html = if options.tidy then beautifyHtml($.html()) else $.html()
-        callback(html)
+        callback(getHtml($, options), $)

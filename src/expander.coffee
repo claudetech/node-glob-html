@@ -2,22 +2,18 @@ cheerio      = require 'cheerio'
 glob         = require 'glob'
 path         = require 'path'
 _            = require 'lodash'
+S            = require 'string'
 beautifyHtml = require('js-beautify').html
-
-getSrcProperty = (tagName) ->
-  switch tagName
-    when 'script' then return 'src'
-    when 'link' then return 'href'
-    else return 'href'
+util         = require './util'
 
 expandOne = ($, elem, options, callback) ->
   $elem = $(elem)
   tag = elem.name
-  srcProp = getSrcProperty(tag)
+  srcProp = util.getSrcProperty(tag)
   expr = path.join options.basepath, $elem.attr('glob')
   glob expr, (err, files) ->
     _.each files, (file) ->
-      filepath = file.replace options.basepath, ''
+      filepath = S(file.replace options.basepath, '').chompLeft('/').s
       $newElem = $elem.clone().attr(srcProp, filepath).attr('glob', null)
       $newElem.attr('group', 'default') if options.concat && _.isEmpty($newElem.attr('group'))
       $elem.before $.html($newElem)

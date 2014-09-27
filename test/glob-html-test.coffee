@@ -9,7 +9,8 @@ describe 'glob html', ->
 
   describe 'Expand mode', ->
     rawHtml = '<script glob="js/**/*.js"></script>'
-    it 'should use expand behavior', ->
+    it 'should use expand behavior', (done) ->
       globHtml.process rawHtml, {basepath: basepath}, (html) ->
         expander.expand rawHtml, {basepath: basepath}, (expected) ->
           expect(html).to.eql(expected)
+          done()

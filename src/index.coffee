@@ -1,10 +1,12 @@
 expander = require './expander'
 _        = require 'lodash'
 
-exports.process = (html, options, callback) ->
+exports.process = (rawHtml, options, callback) ->
   [options, callback] = [{}, options] if _.isFunction(options)
   options ?= {}
-  if options.concat
-    html
-  else
-    expander.expand html, options, callback
+  expander.expand rawHtml, options, (html) ->
+    if options.concat
+      # TODO: concatenate scripts
+      callback html
+    else
+      callback html

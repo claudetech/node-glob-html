@@ -19,6 +19,7 @@ expandOne = ($, elem, options, callback) ->
     _.each files, (file) ->
       filepath = file.replace options.basepath, ''
       $newElem = $elem.clone().attr(srcProp, filepath).attr('glob', null)
+      $newElem.attr('group', 'default') if options.concat && _.isEmpty($newElem.attr('group'))
       $elem.before $.html($newElem)
     $elem.remove()
     callback()

@@ -29,7 +29,7 @@ describe 'Expander', ->
         done()
 
     it 'should add default group when concat', (done) ->
-      expander.expand rawHtml, {basepath: basepath, concat: true}, (html) ->
+      expander.expand rawHtml, {basepath: basepath, concat: true, group: 'default'}, (html) ->
         hasAll(html, 'script', 'src', ['js/bar.js', 'js/foo.js'])
         hasAll(html, 'script', 'group', ['default', 'default'])
         done()

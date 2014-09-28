@@ -12,7 +12,8 @@ var minimistOptions = {
     concat: 'c',
     minify: 'm',
     minifyCss: 'minify-css',
-    minifyJs: 'minify-js'
+    minifyJs: 'minify-js',
+    group: 'g'
   }
 };
 

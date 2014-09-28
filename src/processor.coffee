@@ -57,6 +57,8 @@ exports.concatenateFiles = ($, options, groupedFiles, callback) ->
       pathPrefix = options["#{ext}Prefix"] ? ext
       ext = "min." + ext if options.minify
       outFile = path.join(options.outdir ? options.basepath, pathPrefix, "#{group}.#{ext}")
+      if fs.existsSync outFile
+        fs.unlinkSync outFile
       fs.ensureDirSync(path.dirname(outFile))
       files = _.map files, (f) -> path.join(options.basepath, f)
       [minType, minifyOptions] = getCompressor(type, options)

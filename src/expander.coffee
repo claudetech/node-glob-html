@@ -19,7 +19,10 @@ expandOne = ($, elem, options, callback) ->
       existing = $("#{tag}[group=\"#{group}\"][#{srcProp}=\"#{filepath}\"]")
       return if existing.length > 0
       $newElem = $elem.clone().attr(srcProp, filepath).attr('glob', null)
-      $newElem.attr('group', defaultGroup) if options.concat && _.isEmpty($newElem.attr('group'))
+      if options.concat && _.isEmpty($newElem.attr('group'))
+        $newElem.attr('group', defaultGroup)
+      else if !options.concat
+        $newElem.attr('group', null)
       $elem.before $.html($newElem)
     $elem.remove()
     callback()

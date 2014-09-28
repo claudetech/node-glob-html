@@ -13,7 +13,10 @@ expandOne = ($, elem, options, callback) ->
   expr = path.join options.basepath, $elem.attr('glob')
   glob expr, (err, files) ->
     _.each files, (file) ->
+      group = $elem.attr('group') ? 'default'
       filepath = S(file.replace options.basepath, '').chompLeft('/').s
+      existing = $("#{tag}[group=\"#{group}\"][#{srcProp}=\"#{filepath}\"]")
+      return if existing.length > 0
       $newElem = $elem.clone().attr(srcProp, filepath).attr('glob', null)
       $newElem.attr('group', 'default') if options.concat && _.isEmpty($newElem.attr('group'))
       $elem.before $.html($newElem)

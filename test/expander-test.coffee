@@ -41,6 +41,12 @@ describe 'Expander', ->
         hasAll(html, 'script', 'group', ['app', 'app'])
         done()
 
+    it 'should not duplicate', (done) ->
+      rawHtml = '<script src="js/foo.js" group="app"></script><script glob="js/**/*.js" group="app"></script>'
+      expander.expand rawHtml, {basepath: basepath}, (html) ->
+        hasAll(html, 'script', 'src', ['js/foo.js', 'js/bar.js'])
+        done()
+
   describe 'stylesheets expand', ->
     rawHtml = '<link rel="stylesheet" glob="css/**/*.css"></link>'
 

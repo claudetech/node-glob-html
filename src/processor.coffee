@@ -21,11 +21,15 @@ exports.makeGroups = (files) ->
   groupedFiles
 
 getCompressor = (type, options) ->
-  return ['no-compress', []] unless options.minify
+  fallback = ['no-compress', []]
   switch type
-    when 'script' then ['uglifyjs', ['--mangle']]
-    when 'link' then ['yui-css', []]
-    else ['no-compress', []]
+    when 'script'
+      compress = options.minify || options.minifyJs
+      if compress then ['uglifyjs', ['--mangle']] else fallback
+    when 'link'
+      compress = options.minify || options.minifyCss
+      if compress then ['yui-css', []] else fallback
+    else fallback
 
 getFileExt = (type) ->
   switch type

@@ -6,16 +6,17 @@ var minimist = require('minimist')
 
 
 var minimistOptions = {
-  boolean: ['O', 'c', 'm'],
+  boolean: ['O', 'c', 'm', 'minify-js', 'minify-css'],
   alias: {
     overwrite: 'O',
     concat: 'c',
-    minify: 'm'
+    minify: 'm',
+    minifyCss: 'minify-css',
+    minifyJs: 'minify-js'
   }
 };
 
 var argv = minimist(process.argv.slice(2), minimistOptions);
-
 _.each(argv._, function (file) {
   globHtml.processFile(file, argv, function (err) {
     if (err) {

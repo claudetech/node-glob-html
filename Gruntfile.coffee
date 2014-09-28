@@ -22,7 +22,7 @@ module.exports = (grunt) ->
     mochacov:
       options:
         compilers: ['coffee:coffee-script/register']
-        files: ['test/*.coffee']
+        files: ['test/expander-test.coffee', 'test/glob-html-test.coffee', 'test/processor-test.coffee']
       coverage:
         options:
           coveralls: true

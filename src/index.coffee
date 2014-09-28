@@ -18,6 +18,7 @@ exports.process = (rawHtml, options, callback) ->
       processor.concatAndMinify $, options, ($) ->
         callback getHtml($, options)
     else
+      $('*[group]').attr('group', null)
       callback getHtml($, options)
 
 exports.processFile = (filepath, options, callback) ->

@@ -3,7 +3,6 @@ glob         = require 'glob'
 path         = require 'path'
 _            = require 'lodash'
 S            = require 'string'
-beautifyHtml = require('js-beautify').html
 util         = require './util'
 
 expandOne = ($, elem, options, callback) ->
@@ -27,17 +26,14 @@ expandOne = ($, elem, options, callback) ->
     $elem.remove()
     callback()
 
-getHtml = ($, options) ->
-  if options.tidy then beautifyHtml($.html()) else $.html()
-
 exports.expand = (rawHtml, options, callback) ->
   $ = cheerio.load rawHtml
   [options, callback] = [{}, options] if _.isFunction(options)
   options.basepath ?= ''
   [toGlob, count] = [$('*[glob]'), 0]
-  return callback(getHtml($, options), $) if toGlob.length == 0
+  return callback($) if toGlob.length == 0
   toGlob.each (i, elem) ->
     expandOne $, elem, options, ->
       count += 1
       if count == toGlob.length
-        callback(getHtml($, options), $)
+        callback($)

@@ -1,20 +1,24 @@
-_         = require 'lodash'
-fs        = require 'fs'
-path      = require 'path'
+_            = require 'lodash'
+fs           = require 'fs'
+path         = require 'path'
+beautifyHtml = require('js-beautify').html
 
-expander  = require './expander'
-processor = require './processor'
+expander     = require './expander'
+processor    = require './processor'
+
+getHtml = ($, options) ->
+  if options.tidy then beautifyHtml($.html()) else $.html()
 
 exports.process = (rawHtml, options, callback) ->
   [options, callback] = [{}, options] if _.isFunction(options)
   options ?= {}
   options.tidy ?= true
-  expander.expand rawHtml, options, (html, $) ->
+  expander.expand rawHtml, options, ($) ->
     if options.concat
-      processor.concatAndMinify $, options, (newHtml) ->
-        callback newHtml
+      processor.concatAndMinify $, options, ($) ->
+        callback getHtml($, options)
     else
-      callback html
+      callback getHtml($, options)
 
 exports.processFile = (filepath, options, callback) ->
   [options, callback] = [{}, options] if _.isFunction(options)

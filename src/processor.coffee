@@ -94,4 +94,4 @@ exports.concatAndMinify = ($, options, callback) ->
   groupedFiles = exports.makeGroups files
   exports.concatenateFiles $, options, groupedFiles, (err, results) ->
     exports.replaceTags($, options, results)
-    callback($.html(), $)
+    callback($)

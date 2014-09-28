@@ -12,8 +12,8 @@ describe 'glob html', ->
     rawHtml = '<script glob="js/**/*.js"></script>'
     it 'should use expand behavior', (done) ->
       globHtml.process rawHtml, {basepath: basepath, tidy:false}, (html) ->
-        expander.expand rawHtml, {basepath: basepath}, (expected) ->
-          expect(html).to.eql(expected)
+        expander.expand rawHtml, {basepath: basepath}, ($) ->
+          expect(html).to.eql($.html())
           done()
 
   describe 'concat mode', ->

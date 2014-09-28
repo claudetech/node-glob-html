@@ -6,9 +6,9 @@ var minimist = require('minimist')
 
 
 var minimistOptions = {
-  boolean: ['O', 'c', 'm', 'minify-js', 'minify-css'],
+  boolean: ['c', 'm', 'minify-js', 'minify-css'],
   alias: {
-    overwrite: 'O',
+    output: 'o',
     concat: 'c',
     minify: 'm',
     minifyCss: 'minify-css',
@@ -19,12 +19,16 @@ var minimistOptions = {
 
 var argv = minimist(process.argv.slice(2), minimistOptions);
 _.each(argv._, function (file) {
-  globHtml.processFile(file, argv, function (err) {
+  globHtml.processFile(file, argv, function (err, html) {
     if (err) {
       console.log("Error while processing " + file + ":");
       console.log(err);
     } else {
-      console.log("Processed " + file + " successfully");
+      if (argv.output) {
+        console.log("Saved to " + argv.output + ".");
+      } else {
+        console.log(html);
+      }
     }
   });
 });

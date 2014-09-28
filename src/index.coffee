@@ -25,11 +25,12 @@ exports.processFile = (filepath, options, callback) ->
   [options, callback] = [{}, options] if _.isFunction(options)
   options ?= {}
   options.basepath ?= path.dirname(filepath)
+  options.outdir ?= path.dirname(options.output) if options.output
   fs.readFile filepath, 'utf8', (err, rawHtml) ->
     return callback(err) if err?
     exports.process rawHtml, options, (html) ->
-      if options.overwrite
-        fs.writeFile filepath, html, ->
+      if options.output
+        fs.writeFile options.output, html, ->
           callback(null, html)
       else
         callback(null, html)

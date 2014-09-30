@@ -95,8 +95,8 @@ $ grunt glob
 ```slim
 html
   head
-    script(glob="js/**/*.js")
-    link(rel="stylesheet" glob="css/**/*.css")
+    script(src="js/**/*.js" glob)
+    link(rel="stylesheet" href="css/**/*.css" glob)
 ```
 
 will become
@@ -131,35 +131,42 @@ for production build, where `js/application.min.js` and
 `css/application.min.css` will be concatenated and
 minified versions of the globbed files.
 
-## Using groups
+## Files order
 
 If alphabetical order does not fit your need, you can
-use
+use glob on single files, it will be inserted only once in the output.
 
 ```slim
 html
   head
-    script(src="js/this-one-is-first.js" group="application")
-    script(glob="js/**/*.js")
-    link(rel="stylesheet" glob="css/**/*.css")
+    script(src="js/this-one-is-first.js" glob)
+    script(src="js/**/*.js" glob)
+    link(rel="stylesheet" href="css/**/*.css" glob)
 ```
 
 The files will always be concatenated in order of appearance.
-The default group is called `application`, but you can use any. All files
-in the same group will be concatenated together and ignored from
-globbing if already included.
+
+## Groups
+
+To customize the output for minified files, you can use groups.
+All files in the same group will result in an output
+called `GROUP_NAME.(js|css)` or `GROUP_NAME.min.(js|css)`
+
+If not specified, the default group is `application`.
+You can use name for the group, as long as it can be used as a file
+name in your filesystem.
 
 Here is an example with multiple groups:
 
 ```slim
 html
   head
-    script(src="js/src/this-one-is-first.js" group="application")
-    script(glob="js/src/**/*.js")
-    script(glob="js/vendors/jquery.js" group="vendors")
-    script(glob="js/vendors/**/*.js" group="vendors")
+    script(src="js/src/app.js" group="application" glob)
+    script(src="js/src/**/*.js" glob)
+    script(src="js/vendors/jquery.js" group="vendors" glob)
+    script(src="js/vendors/**/*.js" group="vendors" glob)
 ```
 
 This will be expanded normally in development,
 and will compile into `application.min.js` and `vendors.min.js`
-in development.
+in production.

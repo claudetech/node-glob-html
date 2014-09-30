@@ -9,15 +9,16 @@ describe 'glob html', ->
   basepath = path.join __dirname, 'data'
 
   describe 'Expand mode', ->
-    rawHtml = '<script glob="js/**/*.js"></script>'
+    rawHtml = '<script src="js/**/*.js" glob></script>'
     it 'should use expand behavior', (done) ->
       globHtml.process rawHtml, {basepath: basepath, tidy:false}, (html) ->
         expander.expand rawHtml, {basepath: basepath}, ($) ->
+          $('*[group]').attr('group', null)
           expect(html).to.eql($.html())
           done()
 
   describe 'concat mode', ->
-    rawHtml = '<script glob="js/**/*.js"></script><link ref="stylesheet" glob="css/**/*.css">'
+    rawHtml = '<script src="js/**/*.js" glob></script><link ref="stylesheet" href="css/**/*.css" glob>'
     it 'should concatenate files in groups', (done) ->
       outdir = '/tmp/globhtml-test'
       fs.ensureDirSync outdir

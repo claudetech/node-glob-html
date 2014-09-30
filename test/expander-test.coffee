@@ -15,7 +15,7 @@ describe 'Expander', ->
       expect($(s).attr(attrName)).to.eql(attrs[i])
 
   describe 'scripts expand', ->
-    rawHtml = '<script glob="js/**/*.js"></script>'
+    rawHtml = '<script src="js/**/*.js" glob></script>'
     it 'should expand scripts', (done) ->
       expander.expand rawHtml, {basepath: basepath, tidy: false}, ($) ->
         hasAll($, 'script', 'src', ['js/bar.js', 'js/foo.js'])
@@ -29,20 +29,20 @@ describe 'Expander', ->
         done()
 
     it 'should keep existing group', (done) ->
-      rawHtml = '<script glob="js/**/*.js" group="app"></script>'
+      rawHtml = '<script src="js/**/*.js" group="app" glob></script>'
       expander.expand rawHtml, {basepath: basepath, concat: true}, ($) ->
         hasAll($, 'script', 'src', ['js/bar.js', 'js/foo.js'])
         hasAll($, 'script', 'group', ['app', 'app'])
         done()
 
     it 'should not duplicate', (done) ->
-      rawHtml = '<script src="js/foo.js" group="app"></script><script glob="js/**/*.js" group="app"></script>'
+      rawHtml = '<script src="js/foo.js" glob></script><script src="js/**/*.js" glob></script>'
       expander.expand rawHtml, {basepath: basepath}, ($) ->
         hasAll($, 'script', 'src', ['js/foo.js', 'js/bar.js'])
         done()
 
   describe 'stylesheets expand', ->
-    rawHtml = '<link rel="stylesheet" glob="css/**/*.css"></link>'
+    rawHtml = '<link rel="stylesheet" href="css/**/*.css" glob></link>'
 
     it 'should expand scripts', (done) ->
       expander.expand rawHtml, {basepath: basepath}, ($) ->

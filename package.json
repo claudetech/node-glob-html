@@ -1,6 +1,6 @@
 {
   "name": "glob-html",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Utility to expand glob expressions in HTML.",
   "main": "lib/index.js",
   "bin": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/claudetech/glob-html"
+    "url": "https://github.com/claudetech/node-glob-html"
   },
   "keywords": [
     "html",
@@ -20,9 +20,9 @@
   "author": "Daniel Perez",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/claudetech/glob-html/issues"
+    "url": "https://github.com/claudetech/node-glob-html/issues"
   },
-  "homepage": "https://github.com/claudetech/glob-html",
+  "homepage": "https://github.com/claudetech/node-glob-html",
   "devDependencies": {
     "coffee-script": "^1.8.0",
     "expect.js": "^0.3.1",

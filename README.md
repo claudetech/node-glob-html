@@ -1,4 +1,4 @@
-# glob-html
+# glob-html [![Build Status](https://travis-ci.org/claudetech/node-glob-html.svg?branch=master)](https://travis-ci.org/claudetech/node-glob-html)
 
 A simple utility to expand or concatenate
 glob expressions in HTML.

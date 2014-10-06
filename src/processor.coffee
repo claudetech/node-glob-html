@@ -1,4 +1,3 @@
-uglifyjs   = require 'uglify-js'
 _          = require 'lodash'
 fs         = require 'fs-extra'
 path       = require 'path'

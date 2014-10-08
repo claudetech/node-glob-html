@@ -1,6 +1,6 @@
 {
   "name": "glob-html",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Utility to expand glob expressions in HTML.",
   "main": "lib/index.js",
   "bin": {

@@ -24,7 +24,7 @@ expandOne = ($, elem, options, callback) ->
     callback()
 
 exports.expand = (rawHtml, options, callback) ->
-  $ = cheerio.load rawHtml
+  $ = cheerio.load rawHtml, {decodeEntities: false}
   [options, callback] = [{}, options] if _.isFunction(options)
   options.basepath ?= ''
   [toGlob, count] = [$('*[glob]'), 0]

@@ -15,14 +15,22 @@ describe 'Expander', ->
       expect($(s).attr(attrName)).to.eql(attrs[i])
 
   describe 'scripts expand', ->
-    rawHtml = '<script src="js/**/*.js" glob></script>'
     it 'should expand scripts', (done) ->
+      rawHtml = '<script src="js/**/*.js" glob></script>'
       expander.expand rawHtml, {basepath: basepath, tidy: false}, ($) ->
         hasAll($, 'script', 'src', ['js/bar.js', 'js/foo.js'])
         expect($.html()).to.not.contain '\n'
         done()
 
+    it 'should keep absolute path', (done) ->
+      rawHtml = '<script src="/js/**/*.js" glob></script>'
+      expander.expand rawHtml, {basepath: basepath, tidy: false}, ($) ->
+        hasAll($, 'script', 'src', ['/js/bar.js', '/js/foo.js'])
+        expect($.html()).to.not.contain '\n'
+        done()
+
     it 'should add default group when concat', (done) ->
+      rawHtml = '<script src="js/**/*.js" glob></script>'
       expander.expand rawHtml, {basepath: basepath, concat: true, group: 'default'}, ($) ->
         hasAll($, 'script', 'src', ['js/bar.js', 'js/foo.js'])
         hasAll($, 'script', 'group', ['default', 'default'])

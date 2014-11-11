@@ -78,11 +78,14 @@ exports.concatenateFiles = ($, options, groupedFiles, callback) ->
 exports.replaceTags = ($, options, results) ->
   _.each results, (result) ->
     $elems = $("#{result.type}[group=#{result.group}]")
+    $first = $elems.first()
+    firstSrc = $first.attr(util.getSrcProperty(result.type))
     if options.httpBasepath
       basepath = path.join options.httpBasepath, options.pathPrefix
     else
       basepath = options.outdir ? options.basepath
-      filepath = S(result.file.replace(basepath, '')).chompLeft('/').s
+    filepath = result.file.replace(basepath, '')
+    filepath = S(filepath).chompLeft('/').s unless firstSrc[0] == '/'
     $elem = $elems.first().clone().attr(util.getSrcProperty(result.type), filepath).attr('group', null)
     $elems.first().before($.html($elem))
     $elems.remove()
